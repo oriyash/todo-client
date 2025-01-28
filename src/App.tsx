@@ -1,7 +1,9 @@
-import { useEffect, useState, KeyboardEvent } from "react";
 import "./App.css";
-import { ITodo } from "./types/todo";
+import { useEffect, useState, KeyboardEvent } from "react";
 import axios from "axios";
+import { ITodo } from "./types/todo";
+import Todo from "./components/Todo/Todo";
+import TodoEditing from "./components/TodoEditing/TodoEditing";
 
 function App() {
     const [todos, setTodos] = useState<ITodo[]>([]);
@@ -34,6 +36,11 @@ function App() {
                 setTodos(Array.from(todos));
                 setInputField("");
             });
+    };
+
+    const handleEditClick = (index: number) => {
+        setCurrentEdit(todos[index].body);
+        setEditing(index);
     };
 
     const handleEdit = (
@@ -93,7 +100,52 @@ function App() {
         }
     };
 
-    return <></>;
+    return (
+        <>
+            <h1>Todo App</h1>
+            <h2>Todos</h2>
+            <h3>Add Todo</h3>
+            <input
+                type="text"
+                onChange={(e) => setInputField(e.target.value)}
+                onKeyUp={handleEnterInput}
+                value={inputField}
+            />{" "}
+            <button type="button" className="todo-btn" onClick={handleAdd}>
+                Add Todo
+            </button>
+            {todos.length ? (
+                todos.map((todo: ITodo, index: number) => {
+                    if (index === editing) {
+                        return (
+                            <TodoEditing
+                                todo={todo}
+                                index={index}
+                                handleEdit={handleEdit}
+                                currentEdit={currentEdit}
+                                setCurrentEdit={setCurrentEdit}
+                            />
+                        );
+                    }
+
+                    return (
+                        <Todo
+                            todo={todo}
+                            index={index}
+                            handleToggle={handleToggle}
+                            handleDelete={handleDelete}
+                            handleEditClick={handleEditClick}
+                        />
+                    );
+                })
+            ) : (
+                <h4>No todos to show</h4>
+            )}
+            <button type="button" onClick={handleDeleteAll}>
+                Delete All
+            </button>
+        </>
+    );
 }
 
 export default App;
