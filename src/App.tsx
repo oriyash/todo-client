@@ -11,6 +11,10 @@ function App() {
     const [editing, setEditing] = useState<number | null>(null);
     const [currentEdit, setCurrentEdit] = useState<string | null>(null);
 
+    const cleanInput = (input: string): string => {
+        return input.trim().replace(/\s{2,}/g, " ");
+    };
+
     useEffect(() => {
         axios
             .get<ITodo[]>("http://localhost:8000/api/todos/fetch/all")
@@ -20,7 +24,7 @@ function App() {
     }, []);
 
     const handleAdd = () => {
-        const cleanBody: string = inputField.trim();
+        const cleanBody: string = cleanInput(inputField);
 
         if (!cleanBody.length) {
             return;
@@ -52,7 +56,7 @@ function App() {
             return;
         }
 
-        const cleanBody: string = currentEdit as string;
+        const cleanBody: string = cleanInput(currentEdit as string);
 
         if (!cleanBody.length) {
             return;
@@ -110,6 +114,7 @@ function App() {
                 onChange={(e) => setInputField(e.target.value)}
                 onKeyUp={handleEnterInput}
                 value={inputField}
+                className=""
             />{" "}
             <button type="button" className="todo-btn" onClick={handleAdd}>
                 Add Todo
