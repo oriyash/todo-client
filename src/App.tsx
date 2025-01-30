@@ -54,6 +54,11 @@ function App() {
             return;
         }
 
+        if (cleanBody === todos[index].body) {
+            setEditing(null);
+            return;
+        }
+
         axios
             .put<ITodo>(`http://localhost:8000/api/todos/edit/${id}`, {
                 body: cleanBody,
