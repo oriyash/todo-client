@@ -4,12 +4,13 @@ import axios from "axios";
 import { ITodo } from "./types/todo";
 import Todo from "./components/Todo/Todo";
 import TodoEditing from "./components/TodoEditing/TodoEditing";
+import { IEdit } from "./types/edit";
 
 function App() {
     const [todos, setTodos] = useState<ITodo[]>([]);
     const [inputField, setInputField] = useState<string>("");
-    const [editing, setEditing] = useState<number | null>(null);
-    const [currentEdit, setCurrentEdit] = useState<string | null>(null);
+    const [editing, setEditing] = useState<IEdit | null>(null);
+    // const [currentEdit, setCurrentEdit] = useState<string | null>(null);
 
     const cleanInput = (input: string): string => {
         return input.trim().replace(/\s{2,}/g, " ");
@@ -43,8 +44,7 @@ function App() {
     };
 
     const handleEditClick = (index: number) => {
-        setCurrentEdit(todos[index].body);
-        setEditing(index);
+        setEditing({ index, text: todos[index].body });
     };
 
     const handleEdit = (
@@ -56,7 +56,7 @@ function App() {
             return;
         }
 
-        const cleanBody: string = cleanInput(currentEdit as string);
+        const cleanBody: string = cleanInput((editing as IEdit).text);
 
         if (!cleanBody.length) {
             return;
@@ -70,7 +70,6 @@ function App() {
                 todos.splice(index, 1, res.data);
                 setTodos(Array.from(todos));
                 setEditing(null);
-                setCurrentEdit(null);
             });
     };
 
@@ -121,14 +120,14 @@ function App() {
             </button>
             {todos.length ? (
                 todos.map((todo: ITodo, index: number) => {
-                    if (index === editing) {
+                    if (editing) {
                         return (
                             <TodoEditing
                                 todo={todo}
                                 index={index}
                                 handleEdit={handleEdit}
-                                currentEdit={currentEdit}
-                                setCurrentEdit={setCurrentEdit}
+                                editing={editing}
+                                setEditing={setEditing}
                             />
                         );
                     }

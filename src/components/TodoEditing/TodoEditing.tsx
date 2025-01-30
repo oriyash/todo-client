@@ -1,6 +1,7 @@
 import "./TodoEditing.css";
 import { ITodo } from "../../types/todo";
 import { Dispatch, KeyboardEvent, SetStateAction } from "react";
+import { IEdit } from "../../types/edit";
 
 interface IProps {
     todo: ITodo;
@@ -10,17 +11,11 @@ interface IProps {
         id: number,
         index: number
     ) => void;
-    currentEdit: string | null;
-    setCurrentEdit: Dispatch<SetStateAction<string | null>>;
+    editing: IEdit;
+    setEditing: Dispatch<SetStateAction<IEdit | null>>;
 }
 
-function TodoEditing({
-    todo,
-    index,
-    currentEdit,
-    setCurrentEdit,
-    handleEdit,
-}: IProps) {
+function TodoEditing({ todo, index, handleEdit, editing, setEditing }: IProps) {
     return (
         <>
             <p>
@@ -28,8 +23,10 @@ function TodoEditing({
                 <input
                     type="text"
                     className="edit-input"
-                    value={currentEdit as string}
-                    onChange={(e) => setCurrentEdit(e.target.value)}
+                    value={editing.text}
+                    onChange={(e) =>
+                        setEditing({ ...editing, text: e.target.value })
+                    }
                     onKeyUp={(e) => handleEdit(e, todo.id, index)}
                 />{" "}
                 created at - {todo.created_at}
