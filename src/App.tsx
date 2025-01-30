@@ -100,16 +100,18 @@ function App() {
         }
     };
 
-    const handleEnterEdit = (
+    const handleKeyUpEdit = (
         e: KeyboardEvent<HTMLInputElement>,
         id: number,
         index: number
     ) => {
-        if (e.key !== "Enter") {
+        if (e.key === "Enter") {
+            handleEdit(id, index);
+        } else if (e.key === "Escape") {
+            setEditing(null);
+        } else {
             return;
         }
-
-        handleEdit(id, index);
     };
 
     return (
@@ -135,7 +137,7 @@ function App() {
                                 todo={todo}
                                 index={index}
                                 handleEdit={handleEdit}
-                                handleEnterEdit={handleEnterEdit}
+                                handleKeyUpEdit={handleKeyUpEdit}
                                 editing={editing}
                                 setEditing={setEditing}
                             />

@@ -7,7 +7,7 @@ interface IProps {
     todo: ITodo;
     index: number;
     handleEdit: (id: number, index: number) => void;
-    handleEnterEdit: (
+    handleKeyUpEdit: (
         e: KeyboardEvent<HTMLInputElement>,
         id: number,
         index: number
@@ -20,7 +20,7 @@ function TodoEditing({
     todo,
     index,
     handleEdit,
-    handleEnterEdit,
+    handleKeyUpEdit,
     editing,
     setEditing,
 }: IProps) {
@@ -35,12 +35,13 @@ function TodoEditing({
                     onChange={(e) =>
                         setEditing({ ...editing, text: e.target.value })
                     }
-                    onKeyUp={(e) => handleEnterEdit(e, todo.id, index)}
+                    onKeyUp={(e) => handleKeyUpEdit(e, todo.id, index)}
                 />{" "}
                 created at - {todo.created_at}{" "}
                 <button onClick={() => handleEdit(todo.id, index)}>
                     Confirm
-                </button>
+                </button>{" "}
+                <button onClick={() => setEditing(null)}>Cancel</button>
             </p>
         </>
     );
