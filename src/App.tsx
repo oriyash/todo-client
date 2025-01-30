@@ -120,7 +120,7 @@ function App() {
             </button>
             {todos.length ? (
                 todos.map((todo: ITodo, index: number) => {
-                    if (editing) {
+                    if (editing?.index === index) {
                         return (
                             <TodoEditing
                                 todo={todo}
