@@ -47,15 +47,7 @@ function App() {
         setEditing({ index, text: todos[index].body });
     };
 
-    const handleEdit = (
-        e: KeyboardEvent<HTMLInputElement>,
-        id: number,
-        index: number
-    ) => {
-        if (e.key !== "Enter") {
-            return;
-        }
-
+    const handleEdit = (id: number, index: number) => {
         const cleanBody: string = cleanInput((editing as IEdit).text);
 
         if (!cleanBody.length) {
@@ -103,6 +95,18 @@ function App() {
         }
     };
 
+    const handleEnterEdit = (
+        e: KeyboardEvent<HTMLInputElement>,
+        id: number,
+        index: number
+    ) => {
+        if (e.key !== "Enter") {
+            return;
+        }
+
+        handleEdit(id, index);
+    };
+
     return (
         <>
             <h1>Todo App</h1>
@@ -126,6 +130,7 @@ function App() {
                                 todo={todo}
                                 index={index}
                                 handleEdit={handleEdit}
+                                handleEnterEdit={handleEnterEdit}
                                 editing={editing}
                                 setEditing={setEditing}
                             />
