@@ -48,7 +48,13 @@ function App() {
     };
 
     const handleEdit = (id: number, index: number) => {
-        const cleanBody: string = cleanInput((editing as IEdit).text);
+        if (!editing) {
+            throw new Error(
+                "handleEdit is being called with editing being null, this should never happen"
+            );
+        }
+
+        const cleanBody: string = cleanInput(editing.text);
 
         if (!cleanBody.length) {
             return;
