@@ -22,7 +22,7 @@ function Todo({
                 type="checkbox"
                 className="todo-checkbox"
                 checked={todo.done}
-                onClick={() => handleToggle(todo.id, index)}
+                onChange={() => handleToggle(todo.id, index)}
             />{" "}
             {todo.id}: {todo.body} created at {todo.created_at}{" "}
             <TodoControls
