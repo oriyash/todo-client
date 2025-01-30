@@ -140,6 +140,7 @@ function App() {
                                 handleKeyUpEdit={handleKeyUpEdit}
                                 editing={editing}
                                 setEditing={setEditing}
+                                key={index}
                             />
                         );
                     }
@@ -151,6 +152,7 @@ function App() {
                             handleToggle={handleToggle}
                             handleDelete={handleDelete}
                             handleEditClick={handleEditClick}
+                            key={index}
                         />
                     );
                 })
