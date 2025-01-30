@@ -2,19 +2,12 @@ import "./App.css";
 import { useEffect, useState, KeyboardEvent } from "react";
 import axios from "axios";
 import { ITodo } from "./types/todo";
-import Todo from "./components/Todo/Todo";
-import TodoEditing from "./components/TodoEditing/TodoEditing";
-import { IEdit } from "./types/edit";
+import { cleanInput } from "./utils/cleanInput";
+import TodoList from "./components/TodoList/TodoList";
 
 function App() {
     const [todos, setTodos] = useState<ITodo[]>([]);
     const [inputField, setInputField] = useState<string>("");
-    const [editing, setEditing] = useState<IEdit | null>(null);
-    // const [currentEdit, setCurrentEdit] = useState<string | null>(null);
-
-    const cleanInput = (input: string): string => {
-        return input.trim().replace(/\s{2,}/g, " ");
-    };
 
     useEffect(() => {
         axios
@@ -43,57 +36,6 @@ function App() {
             });
     };
 
-    const handleEditClick = (index: number) => {
-        setEditing({ index, text: todos[index].body });
-    };
-
-    const handleEdit = (id: number, index: number) => {
-        if (!editing) {
-            throw new Error(
-                "handleEdit is being called with editing being null, this should never happen"
-            );
-        }
-
-        const cleanBody: string = cleanInput(editing.text);
-
-        if (!cleanBody.length) {
-            return;
-        }
-
-        if (cleanBody === todos[index].body) {
-            setEditing(null);
-            return;
-        }
-
-        axios
-            .put<ITodo>(`http://localhost:8000/api/todos/edit/${id}`, {
-                body: cleanBody,
-            })
-            .then((res) => {
-                todos.splice(index, 1, res.data);
-                setTodos(Array.from(todos));
-                setEditing(null);
-            });
-    };
-
-    const handleToggle = (id: number, index: number) => {
-        axios
-            .put<ITodo>(`http://localhost:8000/api/todos/toggle/${id}`)
-            .then((res) => {
-                todos.splice(index, 1, res.data);
-                setTodos(Array.from(todos));
-            });
-    };
-
-    const handleDelete = (id: number, index: number) => {
-        axios
-            .delete(`http://localhost:8000/api/todos/delete/${id}`)
-            .then(() => {
-                todos.splice(index, 1);
-                setTodos(Array.from(todos));
-            });
-    };
-
     const handleDeleteAll = () => {
         axios
             .delete("http://localhost:8000/api/todos/delete/all")
@@ -103,20 +45,6 @@ function App() {
     const handleEnterInput = (e: KeyboardEvent<HTMLInputElement>) => {
         if (e.key === "Enter") {
             handleAdd();
-        }
-    };
-
-    const handleKeyUpEdit = (
-        e: KeyboardEvent<HTMLInputElement>,
-        id: number,
-        index: number
-    ) => {
-        if (e.key === "Enter") {
-            handleEdit(id, index);
-        } else if (e.key === "Escape") {
-            setEditing(null);
-        } else {
-            return;
         }
     };
 
@@ -136,32 +64,7 @@ function App() {
                 Add Todo
             </button>
             {todos.length ? (
-                todos.map((todo: ITodo, index: number) => {
-                    if (editing?.index === index) {
-                        return (
-                            <TodoEditing
-                                todo={todo}
-                                index={index}
-                                handleEdit={handleEdit}
-                                handleKeyUpEdit={handleKeyUpEdit}
-                                editing={editing}
-                                setEditing={setEditing}
-                                key={index}
-                            />
-                        );
-                    }
-
-                    return (
-                        <Todo
-                            todo={todo}
-                            index={index}
-                            handleToggle={handleToggle}
-                            handleDelete={handleDelete}
-                            handleEditClick={handleEditClick}
-                            key={index}
-                        />
-                    );
-                })
+                <TodoList todos={todos} setTodos={setTodos} />
             ) : (
                 <h4>No todos to show</h4>
             )}
