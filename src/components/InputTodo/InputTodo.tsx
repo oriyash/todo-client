@@ -1,7 +1,7 @@
-import axios from "axios";
 import { Dispatch, KeyboardEvent, SetStateAction, useState } from "react";
 import { ITodo } from "../../types/todo";
 import { cleanInput } from "../../utils/cleanInput";
+import { TodoManager } from "../../utils/TodoManager";
 
 interface IProps {
     todos: ITodo[];
@@ -18,13 +18,10 @@ function InputTodo({ todos, setTodos }: IProps) {
             return;
         }
 
-        axios
-            .post<ITodo>("http://localhost:8000/api/todos/insert", {
-                body: cleanBody,
-                done: false,
-            })
+        TodoManager.getInstance()
+            .addTodo(cleanBody)
             .then((res) => {
-                todos.push(res.data);
+                todos.push(res);
                 setTodos(Array.from(todos));
                 setInputField("");
             });

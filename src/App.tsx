@@ -1,24 +1,24 @@
 import "./App.css";
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { ITodo } from "./types/todo";
 import TodoList from "./components/TodoList/TodoList";
 import InputTodo from "./components/InputTodo/InputTodo";
+import { TodoManager } from "./utils/TodoManager";
 
 function App() {
     const [todos, setTodos] = useState<ITodo[]>([]);
 
     useEffect(() => {
-        axios
-            .get<ITodo[]>("http://localhost:8000/api/todos/fetch/all")
+        TodoManager.getInstance()
+            .getAllTodos()
             .then((res) => {
-                setTodos(res.data);
+                setTodos(res);
             });
     }, []);
 
     const handleDeleteAll = () => {
-        axios
-            .delete("http://localhost:8000/api/todos/delete/all")
+        TodoManager.getInstance()
+            .deleteAllTodos()
             .then(() => setTodos([]));
     };
 

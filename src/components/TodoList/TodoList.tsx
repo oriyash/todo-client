@@ -1,10 +1,10 @@
-import axios from "axios";
 import { ITodo } from "../../types/todo";
 import Todo from "../Todo/Todo";
 import TodoEditing from "../TodoEditing/TodoEditing";
 import { Dispatch, KeyboardEvent, SetStateAction, useState } from "react";
 import { IEdit } from "../../types/edit";
 import { cleanInput } from "../../utils/cleanInput";
+import { TodoManager } from "../../utils/TodoManager";
 
 interface IProps {
     todos: ITodo[];
@@ -36,29 +36,27 @@ function TodoList({ todos, setTodos }: IProps) {
             return;
         }
 
-        axios
-            .put<ITodo>(`http://localhost:8000/api/todos/edit/${id}`, {
-                body: cleanBody,
-            })
+        TodoManager.getInstance()
+            .editTodo(id, cleanBody)
             .then((res) => {
-                todos.splice(index, 1, res.data);
+                todos.splice(index, 1, res);
                 setTodos(Array.from(todos));
                 setEditing(null);
             });
     };
 
     const handleToggle = (id: number, index: number) => {
-        axios
-            .put<ITodo>(`http://localhost:8000/api/todos/toggle/${id}`)
+        TodoManager.getInstance()
+            .toggleTodo(id)
             .then((res) => {
-                todos.splice(index, 1, res.data);
+                todos.splice(index, 1, res);
                 setTodos(Array.from(todos));
             });
     };
 
     const handleDelete = (id: number, index: number) => {
-        axios
-            .delete(`http://localhost:8000/api/todos/delete/${id}`)
+        TodoManager.getInstance()
+            .deleteTodo(id)
             .then(() => {
                 todos.splice(index, 1);
                 setTodos(Array.from(todos));
