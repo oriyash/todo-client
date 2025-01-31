@@ -77,6 +77,10 @@ function TodoList({ todos, setTodos }: IProps) {
         }
     };
 
+    if (!todos.length) {
+        return <h4>No todos to show</h4>;
+    }
+
     return todos.map((todo: ITodo, index: number) => {
         if (editing?.index === index) {
             return (

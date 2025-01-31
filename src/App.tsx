@@ -28,11 +28,7 @@ function App() {
             <h2>Add Todo</h2>
             <InputTodo todos={todos} setTodos={setTodos} />
             <h2>Todos</h2>
-            {todos.length ? (
-                <TodoList todos={todos} setTodos={setTodos} />
-            ) : (
-                <h4>No todos to show</h4>
-            )}
+            <TodoList todos={todos} setTodos={setTodos} />
             <button type="button" onClick={handleDeleteAll}>
                 Delete All
             </button>
