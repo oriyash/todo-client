@@ -18,7 +18,7 @@ function TodoList({ todos, setTodos }: IProps) {
         setEditing({ index, text: todos[index].body });
     };
 
-    const handleEdit = (id: number, index: number) => {
+    const handleEdit = () => {
         if (!editing) {
             throw new Error(
                 "handleEdit is being called with editing being null, this should never happen"
@@ -31,45 +31,47 @@ function TodoList({ todos, setTodos }: IProps) {
             return;
         }
 
-        if (cleanBody === todos[index].body) {
+        const todo: ITodo = todos[editing.index];
+
+        if (cleanBody === todo.body) {
             setEditing(null);
             return;
         }
 
         TodoManager.getInstance()
-            .editTodo(id, cleanBody)
+            .editTodo(todo.id, cleanBody)
             .then((res) => {
-                todos.splice(index, 1, res);
+                todos.splice(editing.index, 1, res);
                 setTodos(Array.from(todos));
                 setEditing(null);
             });
     };
 
-    const handleToggle = (id: number, index: number) => {
+    const handleToggle = (index: number) => {
+        const todo: ITodo = todos[index];
+
         TodoManager.getInstance()
-            .toggleTodo(id)
+            .toggleTodo(todo.id)
             .then((res) => {
                 todos.splice(index, 1, res);
                 setTodos(Array.from(todos));
             });
     };
 
-    const handleDelete = (id: number, index: number) => {
+    const handleDelete = (index: number) => {
+        const todo: ITodo = todos[index];
+
         TodoManager.getInstance()
-            .deleteTodo(id)
+            .deleteTodo(todo.id)
             .then(() => {
                 todos.splice(index, 1);
                 setTodos(Array.from(todos));
             });
     };
 
-    const handleKeyUpEdit = (
-        e: KeyboardEvent<HTMLInputElement>,
-        id: number,
-        index: number
-    ) => {
+    const handleKeyUpEdit = (e: KeyboardEvent<HTMLInputElement>) => {
         if (e.key === "Enter") {
-            handleEdit(id, index);
+            handleEdit();
         } else if (e.key === "Escape") {
             setEditing(null);
         } else {

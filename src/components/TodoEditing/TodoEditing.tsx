@@ -5,12 +5,8 @@ import { IEdit } from "../../types/edit";
 interface IProps {
     todo: ITodo;
     index: number;
-    handleEdit: (id: number, index: number) => void;
-    handleKeyUpEdit: (
-        e: KeyboardEvent<HTMLInputElement>,
-        id: number,
-        index: number
-    ) => void;
+    handleEdit: (index: number) => void;
+    handleKeyUpEdit: (e: KeyboardEvent<HTMLInputElement>) => void;
     editing: IEdit;
     setEditing: Dispatch<SetStateAction<IEdit | null>>;
 }
@@ -33,12 +29,10 @@ function TodoEditing({
                     onChange={(e) =>
                         setEditing({ ...editing, text: e.target.value })
                     }
-                    onKeyUp={(e) => handleKeyUpEdit(e, todo.id, index)}
+                    onKeyUp={handleKeyUpEdit}
                 />{" "}
                 created at - {todo.created_at}{" "}
-                <button onClick={() => handleEdit(todo.id, index)}>
-                    Confirm
-                </button>{" "}
+                <button onClick={() => handleEdit(index)}>Confirm</button>{" "}
                 <button onClick={() => setEditing(null)}>Cancel</button>
             </p>
         </>

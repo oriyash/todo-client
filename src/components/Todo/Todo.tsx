@@ -4,8 +4,8 @@ interface ITodoProps {
     todo: ITodo;
     index: number;
     handleEditClick: (index: number) => void;
-    handleToggle: (id: number, index: number) => void;
-    handleDelete: (id: number, index: number) => void;
+    handleToggle: (index: number) => void;
+    handleDelete: (index: number) => void;
 }
 
 function Todo({
@@ -20,11 +20,10 @@ function Todo({
             <input
                 type="checkbox"
                 checked={todo.done}
-                onChange={() => handleToggle(todo.id, index)}
+                onChange={() => handleToggle(index)}
             />{" "}
             {todo.id}: {todo.body} created at {todo.created_at}{" "}
             <TodoControls
-                todo={todo}
                 index={index}
                 handleEditClick={handleEditClick}
                 handleDelete={handleDelete}
@@ -34,14 +33,12 @@ function Todo({
 }
 
 interface ITodoControlsProps {
-    todo: ITodo;
     index: number;
     handleEditClick: (index: number) => void;
-    handleDelete: (id: number, index: number) => void;
+    handleDelete: (index: number) => void;
 }
 
 function TodoControls({
-    todo,
     index,
     handleEditClick,
     handleDelete,
@@ -51,7 +48,7 @@ function TodoControls({
             <button type="button" onClick={() => handleEditClick(index)}>
                 Edit
             </button>{" "}
-            <button type="button" onClick={() => handleDelete(todo.id, index)}>
+            <button type="button" onClick={() => handleDelete(index)}>
                 Delete
             </button>
         </>
