@@ -30,7 +30,6 @@ function TodoEditing({
                 {todo.id}:{" "}
                 <input
                     type="text"
-                    className="edit-input"
                     value={editing.text}
                     onChange={(e) =>
                         setEditing({ ...editing, text: e.target.value })

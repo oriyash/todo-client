@@ -20,7 +20,6 @@ function Todo({
         <p>
             <input
                 type="checkbox"
-                className="todo-checkbox"
                 checked={todo.done}
                 onChange={() => handleToggle(todo.id, index)}
             />{" "}
@@ -50,18 +49,10 @@ function TodoControls({
 }: ITodoControlsProps) {
     return (
         <>
-            <button
-                type="button"
-                className="todo-btn"
-                onClick={() => handleEditClick(index)}
-            >
+            <button type="button" onClick={() => handleEditClick(index)}>
                 Edit
             </button>{" "}
-            <button
-                type="button"
-                className="todo-btn"
-                onClick={() => handleDelete(todo.id, index)}
-            >
+            <button type="button" onClick={() => handleDelete(todo.id, index)}>
                 Delete
             </button>
         </>
