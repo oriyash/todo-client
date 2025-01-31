@@ -1,13 +1,12 @@
 import "./App.css";
-import { useEffect, useState, KeyboardEvent } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { ITodo } from "./types/todo";
-import { cleanInput } from "./utils/cleanInput";
 import TodoList from "./components/TodoList/TodoList";
+import InputTodo from "./components/InputTodo/InputTodo";
 
 function App() {
     const [todos, setTodos] = useState<ITodo[]>([]);
-    const [inputField, setInputField] = useState<string>("");
 
     useEffect(() => {
         axios
@@ -17,52 +16,18 @@ function App() {
             });
     }, []);
 
-    const handleAdd = () => {
-        const cleanBody: string = cleanInput(inputField);
-
-        if (!cleanBody.length) {
-            return;
-        }
-
-        axios
-            .post<ITodo>("http://localhost:8000/api/todos/insert", {
-                body: cleanBody,
-                done: false,
-            })
-            .then((res) => {
-                todos.push(res.data);
-                setTodos(Array.from(todos));
-                setInputField("");
-            });
-    };
-
     const handleDeleteAll = () => {
         axios
             .delete("http://localhost:8000/api/todos/delete/all")
             .then(() => setTodos([]));
     };
 
-    const handleEnterInput = (e: KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === "Enter") {
-            handleAdd();
-        }
-    };
-
     return (
         <>
             <h1>Todo App</h1>
+            <h2>Add Todo</h2>
+            <InputTodo todos={todos} setTodos={setTodos} />
             <h2>Todos</h2>
-            <h3>Add Todo</h3>
-            <input
-                type="text"
-                onChange={(e) => setInputField(e.target.value)}
-                onKeyUp={handleEnterInput}
-                value={inputField}
-                className=""
-            />{" "}
-            <button type="button" className="todo-btn" onClick={handleAdd}>
-                Add Todo
-            </button>
             {todos.length ? (
                 <TodoList todos={todos} setTodos={setTodos} />
             ) : (
