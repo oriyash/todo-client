@@ -1,5 +1,4 @@
 import { ITodo } from "../../types/todo";
-import "./Todo.css";
 
 interface ITodoProps {
     todo: ITodo;
